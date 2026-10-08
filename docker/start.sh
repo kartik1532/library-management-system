@@ -14,6 +14,9 @@ mkdir -p /var/www/html/bootstrap/cache
 # Create the public storage symlink if it doesn't already exist
 php artisan storage:link || true
 
+# Run database migrations
+php artisan migrate --force
+
 # Cache Laravel configuration
 php artisan config:cache
 
@@ -31,4 +34,4 @@ echo "Starting PHP-FPM..."
 php-fpm -D
 
 echo "Starting Nginx..."
-nginx -g "daemon off;"
+nginx -g 'daemon off;'
