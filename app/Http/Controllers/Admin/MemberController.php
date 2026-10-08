@@ -7,7 +7,7 @@ use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class MemberController extends Controller
@@ -48,30 +48,36 @@ class MemberController extends Controller
         ));
     }
 
-    /**
-     * Show member creation form.
-     */
     public function create(): View
     {
-        $users = User::query()
-            ->where('role', 'member')
-            ->whereDoesntHave('member')
-            ->orderBy('name')
-            ->get();
-
-        return view('admin.members.create', compact('users'));
+        return view('admin.members.create');
     }
-
+    /**
+     * Store a new member.
+     */
     /**
      * Store a new member.
      */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'user_id' => [
+            'name' => [
                 'required',
-                'integer',
-                'exists:users,id',
+                'string',
+                'max:255',
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
             ],
 
             'phone' => [
@@ -104,29 +110,34 @@ class MemberController extends Controller
             ],
         ]);
 
-        $user = User::findOrFail($validated['user_id']);
+        DB::transaction(function () use ($validated) {
 
-        if ($user->role !== 'member') {
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'user_id' => 'Only users with the member role can be assigned to a member record.',
-                ]);
-        }
+            /*
+             * Create the login account.
+             */
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'role' => 'member',
+            ]);
 
-        if ($user->member()->exists()) {
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'user_id' => 'This user already has a member profile.',
-                ]);
-        }
-
-        Member::create($validated);
+            /*
+             * Create the library member profile.
+             */
+            Member::create([
+                'user_id' => $user->id,
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'membership_number' => $validated['membership_number'],
+                'join_date' => $validated['join_date'],
+                'status' => $validated['status'],
+            ]);
+        });
 
         return redirect()
             ->route('admin.members.index')
-            ->with('success', 'Member created successfully.');
+            ->with('success', 'Member account and membership created successfully.');
     }
 
     /**
@@ -207,7 +218,7 @@ class MemberController extends Controller
                 ->withInput()
                 ->withErrors([
                     'status' => 'This member cannot be made inactive because they still have borrowed books.',
-                ]);                                                                     
+                ]);
         }
 
         $member->update($validated);

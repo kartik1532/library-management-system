@@ -19,7 +19,7 @@
             <h2 class="fw-bold mb-1">Add Member</h2>
 
             <p class="text-muted mb-0">
-                Create a library membership for an existing member account.
+                Create a new member account and library membership.
             </p>
         </div>
 
@@ -54,35 +54,21 @@
 
                 <div class="row g-4">
 
+                    {{-- NAME --}}
                     <div class="col-md-6">
 
                         <label class="form-label fw-semibold">
-                            Member Account <span class="text-danger">*</span>
+                            Full Name <span class="text-danger">*</span>
                         </label>
 
-                        <select name="user_id"
-                                class="form-select @error('user_id') is-invalid @enderror"
-                                required>
+                        <input type="text"
+                               name="name"
+                               class="form-control @error('name') is-invalid @enderror"
+                               value="{{ old('name') }}"
+                               placeholder="Enter member name"
+                               required>
 
-                            <option value="">
-                                Select member account
-                            </option>
-
-                            @foreach($users as $user)
-
-                                <option value="{{ $user->id }}"
-                                    @selected(old('user_id') == $user->id)>
-
-                                    {{ $user->name }}
-                                    — {{ $user->email }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                        @error('user_id')
+                        @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -90,10 +76,58 @@
 
                     </div>
 
+
+                    {{-- EMAIL --}}
                     <div class="col-md-6">
 
                         <label class="form-label fw-semibold">
-                            Membership Number <span class="text-danger">*</span>
+                            Email <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="email"
+                               name="email"
+                               class="form-control @error('email') is-invalid @enderror"
+                               value="{{ old('email') }}"
+                               placeholder="member@example.com"
+                               required>
+
+                        @error('email')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- PASSWORD --}}
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Password <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="password"
+                               name="password"
+                               class="form-control @error('password') is-invalid @enderror"
+                               placeholder="Enter password"
+                               required>
+
+                        @error('password')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- MEMBERSHIP NUMBER --}}
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Membership Number
+                            <span class="text-danger">*</span>
                         </label>
 
                         <input type="text"
@@ -111,6 +145,8 @@
 
                     </div>
 
+
+                    {{-- PHONE --}}
                     <div class="col-md-6">
 
                         <label class="form-label fw-semibold">
@@ -119,12 +155,20 @@
 
                         <input type="text"
                                name="phone"
-                               class="form-control"
+                               class="form-control @error('phone') is-invalid @enderror"
                                value="{{ old('phone') }}"
                                placeholder="Phone number">
 
+                        @error('phone')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
 
+
+                    {{-- JOIN DATE --}}
                     <div class="col-md-6">
 
                         <label class="form-label fw-semibold">
@@ -133,12 +177,20 @@
 
                         <input type="date"
                                name="join_date"
-                               class="form-control"
+                               class="form-control @error('join_date') is-invalid @enderror"
                                value="{{ old('join_date', now()->format('Y-m-d')) }}"
                                required>
 
+                        @error('join_date')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
 
+
+                    {{-- ADDRESS --}}
                     <div class="col-12">
 
                         <label class="form-label fw-semibold">
@@ -147,11 +199,19 @@
 
                         <textarea name="address"
                                   rows="4"
-                                  class="form-control"
+                                  class="form-control @error('address') is-invalid @enderror"
                                   placeholder="Member address">{{ old('address') }}</textarea>
+
+                        @error('address')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
+
+                    {{-- STATUS --}}
                     <div class="col-md-6">
 
                         <label class="form-label fw-semibold">
@@ -159,7 +219,7 @@
                         </label>
 
                         <select name="status"
-                                class="form-select">
+                                class="form-select @error('status') is-invalid @enderror">
 
                             <option value="active"
                                 @selected(old('status', 'active') === 'active')>
@@ -173,11 +233,19 @@
 
                         </select>
 
+                        @error('status')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
 
                 </div>
 
+
                 <hr class="my-4">
+
 
                 <div class="d-flex justify-content-end gap-2">
 
@@ -191,7 +259,8 @@
                     <button type="submit"
                             class="btn btn-primary">
 
-                        <i class="bi bi-check-lg me-1"></i>
+                        <i class="bi bi-person-plus me-1"></i>
+
                         Create Member
 
                     </button>

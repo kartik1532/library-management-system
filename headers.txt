@@ -1,0 +1,12 @@
+HTTP/1.1 302 Found
+Server: nginx
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Powered-By: PHP/8.2.34
+Cache-Control: no-cache, private
+Date: Wed, 07 Oct 2026 13:21:56 GMT
+Location: http://127.0.0.1:10000/admin/dashboard
+Set-Cookie: XSRF-TOKEN=eyJpdiI6ImFtT2lkQVpmMFFXRnc4UEFUQkFIcGc9PSIsInZhbHVlIjoiRTJwWEF6cmhZNWJHQ2hUWmdTZ2lLZWVhaTdDdjBoSExRWGY3UmFMNFhXQVdWN29ua0ZrNnJHWHVSYjhvZnpzVlN3QkxPUUE4cUFBMDBUbHhWRWgvTzFEUGxNcWM4TUx5WTd0MnNWdmN5NFJabVlqYlRuZ0xLUVdmdXJBWEQwY28iLCJtYWMiOiI5NDQ1MTczMDliNWQ1YzE4MTEzMzM2YTllMWU2ZTdkYzRlZDM4M2I0NjE2MTU0MDNjOWMzZTk0MmExNDEyOTE3IiwidGFnIjoiIn0%3D; expires=Wed, 07 Oct 2026 15:21:56 GMT; Max-Age=7200; path=/; samesite=lax
+Set-Cookie: library-management-system-session=eyJpdiI6IkdONVNBRFJySmNRT2tRU2twYklxRUE9PSIsInZhbHVlIjoicUJwL2poc1JpNFFNUUZmY2VsK0FzdkVINU41RERFRUFxczc3VXlaUFhnd0Zwc0FLaVpqT29ZbTVFMVN6WlRscFVmd3IyWlE1dTZyZ3IxdWFQMHl3UzJseFV5NXczQnhlTjRpWGdQc3NleDh6bjZvWXJHME9XdjFYTUkrcSt2N1MiLCJtYWMiOiIyMTJkZWU3NzVjMzBiYTJjOWY2ZDNkY2QxNjdjZGM1ODQ4Y2RjMDFjMWU2ZGU4NzdkNDU4ODJiNjBiNDljZGEyIiwidGFnIjoiIn0%3D; expires=Wed, 07 Oct 2026 15:21:56 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+

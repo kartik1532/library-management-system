@@ -21,63 +21,62 @@ class LoginController extends Controller
     /**
      * Authenticate the user.
      */
-   public function store(Request $request): RedirectResponse
-{
-    $credentials = $request->validate([
-        'email' => [
-            'required',
-            'email',
-        ],
-        'password' => [
-            'required',
-            'string',
-        ],
-    ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'email' => [
+                'required',
+                'email',
+            ],
+            'password' => [
+                'required',
+                'string',
+            ],
+        ]);
 
-    $remember = $request->boolean('remember');
+        $remember = $request->boolean('remember');
 
-    if (! Auth::attempt($credentials, $remember)) {
-        return back()
-            ->withInput($request->only('email', 'remember'))
-            ->withErrors([
-                'email' => 'The provided credentials are incorrect.',
-            ]);
-    }
-
-    $request->session()->regenerate();
-
-    $user = $request->user();
-
-    /*
-     * Prevent inactive members from logging in.
-     */
-    if ($user->role === 'member') {
-        $member = $user->member;
-
-        if (!$member || $member->status !== 'active') {
-            Auth::logout();
-
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return redirect()
-                ->route('login')
+        if (!Auth::attempt($credentials, $remember)) {
+            return back()
+                ->withInput($request->only('email', 'remember'))
                 ->withErrors([
-                    'email' => 'Your member account is inactive. Please contact the administrator.',
+                    'email' => 'The provided credentials are incorrect.',
                 ]);
         }
-    }
 
-    if ($user->isAdmin()) {
+        $request->session()->regenerate();
+
+        $user = $request->user();
+
+        /*
+         * Prevent inactive members from logging in.
+         */
+        if ($user->role === 'member') {
+            $member = $user->member;
+
+            if (!$member || $member->status !== 'active') {
+                Auth::logout();
+
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()
+                    ->route('login')
+                    ->withErrors([
+                        'email' => 'Your member account is inactive. Please contact the administrator.',
+                    ]);
+            }
+        }
+
+        if ($user->isAdmin()) {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('success', 'Welcome back, administrator.');
+        }
         return redirect()
-            ->intended(route('admin.dashboard'))
-            ->with('success', 'Welcome back, administrator.');
+            ->intended(route('member.dashboard'))
+            ->with('success', 'Welcome back.');
     }
-
-    return redirect()
-        ->intended(route('member.dashboard'))
-        ->with('success', 'Welcome back.');
-}
     /**
      * Log the user out.
      */
