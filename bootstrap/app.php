@@ -17,12 +17,15 @@ return Application::configure(
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'member' => MemberMiddleware::class,
             'admin.api' => AdminApiMiddleware::class,
         ]);
     })
+
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(function ($request, $input) {
             return $request->is('api/*') || $request->expectsJson();
