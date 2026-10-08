@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,36 +17,48 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         /*
-         * Create admin user.
+         * Create or update admin user.
          */
-        User::create([
-            'name' => 'admin',
-            'email' => 'admin@library.test',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
-        /*
-         * Create authors.
-         */
-        $authors = Author::factory()
-            ->count(5)
-            ->create();
+        User::firstOrCreate(
+            ['email' => 'admin@library.test'],
+            [
+                'name' => 'admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
 
         /*
-         * Create categories.
+         * Create demo authors only if none exist.
          */
-        $categories = Category::factory()
-            ->count(5)
-            ->create();
+        if (Author::count() === 0) {
+            $authors = Author::factory()
+                ->count(5)
+                ->create();
+        } else {
+            $authors = Author::all();
+        }
 
         /*
-         * Create books using existing authors
-         * and categories.
+         * Create demo categories only if none exist.
          */
-        Book::factory()
-            ->count(20)
-            ->recycle($authors)
-            ->recycle($categories)
-            ->create();
+        if (Category::count() === 0) {
+            $categories = Category::factory()
+                ->count(5)
+                ->create();
+        } else {
+            $categories = Category::all();
+        }
+
+        /*
+         * Create demo books only if none exist.
+         */
+        if (Book::count() === 0) {
+            Book::factory()
+                ->count(20)
+                ->recycle($authors)
+                ->recycle($categories)
+                ->create();
+        }
     }
 }
